@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Little Man Computer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="./js/littleMan.js" defer></script>
+</head>
+
+<body class="h-screen w-screen font-mono bg-gray-600">
+  <div class="grid grid-cols-5 grid-rows-4 h-screen w-screen">
+
+    <!-- Memory -->
+    <div id="memSection"
+      class=" flex flex-col row-start-1 col-start-1 row-end-5 col-end-4 border-2 border-black m-1 text-center rounded-md">
+      <h2 class="bg-black text-white font-extrabold">Little Man Computer</h2>
+      <div id="memCells"
+        class="grid grid-rows-10 grid-cols-10 border border-black grow rounded-md rounded-t-none bg-orange-600">
+      </div>
+    </div>
+
+    <!-- Inbox -->
+    <div id="inSection"
+      class="flex flex-col col-start-4 row-span-2 border-2 border-black m-1 text-center bg-yellow-200 rounded-md overflow-y-hidden">
+      <h3 class="bg-black text-white font-extrabold">IN</h3>
+      <div class="flex px-2 py-1">
+        <button onclick="pushIn()" class="bg-green-500 rounded-lg py-1 px-3 border border-black">Push</button>
+        <input id="pushValue" type="number" min="0" max="1024" value="0" onchange="validateIn()"
+          class="border border-gray-700 text-right rounded-md mx-2 grow">
+        <button onclick="clearIn()" class="bg-red-600 rounded-lg py-1 px-3 border border-black">Clear</button>
+      </div>
+      <div class="flex px-2 py-1 my-1 h-full overflow-y-hidden">
+        <div id="inSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-hidden">
+        </div>
+      </div>
+    </div>
+
+    <!-- Outbox -->
+    <div id="outSection"
+      class="flex flex-col col-start-5 border-2 border-black m-1 text-center bg-yellow-500 rounded-md overflow-y-hidden">
+      <h3 class="bg-black text-white font-extrabold">OUT</h3>
+      <div class="flex px-2 py-1 my-1 h-full overflow-y-hidden">
+        <div id="outSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-hidden">
+        </div>
+      </div>
+    </div>
+
+    <!-- Program options -->
+    <div id="programSection"
+      class="col-start-4 row-start-3 row-span-2 border-2 border-black m-1 text-center overflow-hidden rounded-md bg-amber-400">
+      <h3 class="bg-black text-white font-extrabold">PROGRAM</h3>
+      <div class="flex m-1 flex-wrap">
+        <div class="flex flex-col m-1">
+          <p class="text-left">Address:</p>
+          <input id="progAddy" type="text" size="3" class="text-right px-1 border border-black rounded-md" value="00">
+        </div>
+        <div class="flex flex-col m-1">
+          <p class="text-left">Data:</p>
+          <input id="progData" type="text" size="10" class="text-right px-1 border border-black rounded-md" value="000">
+        </div>
+        <button onclick="pushProg()"
+          class="grow bg-green-500 rounded-lg py-1 px-3 m-1 border border-black">Push</button>
+        <button onclick="clearProgAddress()"
+          class="bg-red-600 rounded-lg py-1 px-3 m-1 border border-black">Clear</button>
+      </div>
+      <div class="flex m-1">
+        <input id="progAutoInc" type="checkbox" class="mr-2" checked>
+        <p>Auto-Increment Address</p>
+      </div>
+    </div>
+
+    <!-- Run options -->
+    <div id="infoSection"
+      class="col-start-5 row-start-2 row-span-3 border-2 bg-white border-black m-1 text-center rounded-md">
+      <h3 class="bg-black text-white font-extrabold">INFO</h3>
+
+      <div class="flex m-2">
+        <p>A Register:</p>
+        <p class="grow">---</p>
+      </div>
+
+      <div class="flex m-2">
+        <p>Instruction Count:</p>
+        <p class="grow">000</p>
+      </div>
+
+      <hr>
+
+      <div class="flex flex-col m-2">
+        <div class="flex grow">
+          <button id="stepProgram"
+            class="m-1 p-1 bg-blue-500 rounded-md text-white border border-blue-800 grow">Step</button>
+          <button id="runProgram"
+            class="m-1 p-1 bg-green-500 rounded-md text-white border border-green-800 grow">Run</button>
+          <button id="haltProgram"
+            class="m-1 p-1 bg-red-500 rounded-md text-white border border-red-800 grow">Halt</button>
+        </div>
+
+        <hr class="my-2">
+
+        <div class="flex">
+          <p class="grow">Halted</p>
+          <input id="runSpeed" min="0.5" max="10" step="0.5" type="range">
+
+        </div>
+        <p id="curSpeed">5 Hz</p>
+      </div>
+
+      <div class="bg-white border border-gray-700 m-1 rounded-md mt-0 overflow-hidden">
+        <h4 class="text-lg bg-lime-400 rounded-md rounded-b-none p-1 font-bold">Instructions</h4>
+        <p class="text-sm text-left px-3">000 - Halt</p>
+        <p class="text-sm text-left px-3 bg-lime-200">1xx - Add &xx to A</p>
+        <p class="text-sm text-left px-3">2xx - Sub &xx from A</p>
+        <p class="text-sm text-left px-3 bg-lime-200">3xx - Move A -> &xx</p>
+        <p class="text-sm text-left px-3">5xx - Move &xx -> A</p>
+        <p class="text-sm text-left px-3 bg-lime-200">6xx - Jump</p>
+        <p class="text-sm text-left px-3">7xx - Jump 0</p>
+        <p class="text-sm text-left px-3 bg-lime-200">8xx - Jump +</p>
+        <p class="text-sm text-left px-3">901 - IN -> A</p>
+        <p class="text-sm text-left px-3 bg-lime-200 rounded-b-md">902 - A -> Out</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
