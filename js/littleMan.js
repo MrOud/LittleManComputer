@@ -151,3 +151,69 @@ function clearProgAddress() {
   const cell = document.getElementById("cell" + addyHigh + addyLow)
   cell.innerHTML = "---"
 }
+
+/**
+ * Info Section
+ */
+const aRegister = document.getElementById("aRegister")
+const programCounter = document.getElementById("programCounter")
+
+const runState = document.getElementById("runState")
+const runSpeed = document.getElementById("runSpeed")
+const curSpeed = document.getElementById("curSpeed")
+
+let progCounter = 0
+let isRunning = false
+
+console.log(aRegister.innerHTML + " " + programCounter.innerHTML)
+console.log(runState.innerHTML + " " + runSpeed.value + " " + curSpeed.innerHTML)
+
+function changeRunSpeed() {
+  curSpeed.innerHTML = runSpeed.value + " Hz"
+
+  if (isRunning) {
+    haltProgram()
+    runProgram()
+  }
+}
+
+function stepProgram() {
+  progCounter += 1
+  if (progCounter > 99) progCounter = 0
+
+  if (!parseInstruction()) return
+
+  programCounter.innerHTML = `${Math.floor(progCounter / 10)}${progCounter % 10}`
+}
+
+let interval
+function runProgram() {
+  interval = setInterval(stepProgram, 1000 / runSpeed.value)
+  runState.innerHTML = "Running"
+  isRunning = true
+}
+
+function haltProgram() {
+  window.clearInterval(interval)
+  runState.innerHTML = "Halted"
+  isRunning = false
+}
+
+/**
+ * System Section
+ */
+function parseInstruction() {
+  pcHigh = Math.floor(progCounter / 10)
+  pcLow = progCounter % 10
+
+  const curCell = document.getElementById(`cell${pcHigh}${pcLow}`)
+  const cellValue = Number(curCell.innerHTML)
+
+  if (isNaN(cellValue) || cellValue == 0) {
+    haltProgram()
+    console.log("Coffee break!")
+    return false
+  }
+
+  return true
+}

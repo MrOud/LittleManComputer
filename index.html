@@ -78,34 +78,35 @@
 
       <div class="flex m-2">
         <p>A Register:</p>
-        <p class="grow">---</p>
+        <p id="aRegister" class="grow">---</p>
       </div>
 
       <div class="flex m-2">
-        <p>Instruction Count:</p>
-        <p class="grow">000</p>
+        <p>Program Counter:</p>
+        <p id="programCounter" class="grow">00</p>
       </div>
 
       <hr>
 
       <div class="flex flex-col m-2">
         <div class="flex grow">
-          <button id="stepProgram"
+          <button id="stepProgram" onclick="stepProgram()"
             class="m-1 p-1 bg-blue-500 rounded-md text-white border border-blue-800 grow">Step</button>
-          <button id="runProgram"
+          <button id="runProgram" onclick="runProgram()"
             class="m-1 p-1 bg-green-500 rounded-md text-white border border-green-800 grow">Run</button>
-          <button id="haltProgram"
+          <button id="haltProgram" onclick="haltProgram()"
             class="m-1 p-1 bg-red-500 rounded-md text-white border border-red-800 grow">Halt</button>
         </div>
 
         <hr class="my-2">
 
         <div class="flex">
-          <p class="grow">Halted</p>
-          <input id="runSpeed" min="0.5" max="10" step="0.5" type="range">
+          <p id="runState" class="grow">Halted</p>
+          <input id="runSpeed" min="0.5" max="10" step="0.5" type="range" value="1" onchange="changeRunSpeed()"
+            oninput="changeRunSpeed()">
 
         </div>
-        <p id="curSpeed">5 Hz</p>
+        <p id="curSpeed">1 Hz</p>
       </div>
 
       <div class="bg-white border border-gray-700 m-1 rounded-md mt-0 overflow-hidden">
