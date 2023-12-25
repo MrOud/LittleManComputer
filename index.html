@@ -44,6 +44,7 @@
       <div class="flex px-2 py-1 my-1 h-full overflow-y-hidden">
         <div id="outSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-hidden">
         </div>
+        <button onclick="clearOut()" class="bg-red-600 rounded-lg py-1 px-3 border border-black">Clear</button>
       </div>
     </div>
 
@@ -89,13 +90,15 @@
       <hr>
 
       <div class="flex flex-col m-2">
-        <div class="flex grow">
+        <div class="flex grow flex-wrap">
           <button id="stepProgram" onclick="stepProgram()"
             class="m-1 p-1 bg-blue-500 rounded-md text-white border border-blue-800 grow">Step</button>
           <button id="runProgram" onclick="runProgram()"
             class="m-1 p-1 bg-green-500 rounded-md text-white border border-green-800 grow">Run</button>
           <button id="haltProgram" onclick="haltProgram()"
             class="m-1 p-1 bg-red-500 rounded-md text-white border border-red-800 grow">Halt</button>
+          <button id="zeroProgram" onclick="resetProgramCounter()"
+            class="m-1 p-1 bg-yellow-500 rounded-md text-white border border-yellow-800 grow">Reset</button>
         </div>
 
         <hr class="my-2">

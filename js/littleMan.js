@@ -50,7 +50,7 @@ let inArray = new Array()
 //Add a value to the 
 function pushIn() {
   const inValue = Number(valueIn.value)
-  if (inValue >= 0 && inValue <= 1024 && inArray.length <= 20) {
+  if (inValue >= 0 && inValue <= 999 && inArray.length <= 20) {
     inArray.push(Number(inValue))
     updateInSheet()
   }
@@ -62,18 +62,42 @@ function clearIn() {
 }
 
 function validateIn() {
-  if (valueIn.value > 1024) valueIn.value = 1024
+  if (valueIn.value > 999) valueIn.value = 999
   if (valueIn.value < 0) valueIn.value = 0
 }
 
 function updateInSheet() {
   inSheet.innerHTML = ""
   inArray.map((val) => {
-    console.log(val)
     const p = document.createElement("p")
     p.innerHTML = val
     inSheet.prepend(p)
   })
+}
+
+/**
+ * Output section
+ */
+const outSheet = document.getElementById("outSheet")
+let outArray = new Array()
+
+function pushOut(value) {
+  outArray.push(value)
+  updateOutSheet()
+}
+
+function updateOutSheet() {
+  outSheet.innerHTML = ""
+  outArray.map((val) => {
+    const p = document.createElement("p")
+    p.innerHTML = val
+    outSheet.append(p)
+  })
+}
+
+function clearOut() {
+  outArray = new Array()
+  updateOutSheet()
 }
 
 /**
@@ -165,9 +189,6 @@ const curSpeed = document.getElementById("curSpeed")
 let progCounter = 0
 let isRunning = false
 
-console.log(aRegister.innerHTML + " " + programCounter.innerHTML)
-console.log(runState.innerHTML + " " + runSpeed.value + " " + curSpeed.innerHTML)
-
 function changeRunSpeed() {
   curSpeed.innerHTML = runSpeed.value + " Hz"
 
@@ -178,11 +199,10 @@ function changeRunSpeed() {
 }
 
 function stepProgram() {
-  progCounter += 1
-  if (progCounter > 99) progCounter = 0
-
   if (!parseInstruction()) return
 
+  progCounter += 1
+  if (progCounter > 99) progCounter = 0
   programCounter.innerHTML = `${Math.floor(progCounter / 10)}${progCounter % 10}`
 }
 
@@ -197,6 +217,13 @@ function haltProgram() {
   window.clearInterval(interval)
   runState.innerHTML = "Halted"
   isRunning = false
+}
+
+function resetProgramCounter() {
+  haltProgram()
+  progCounter = 0
+
+  programCounter.innerHTML = '00'
 }
 
 /**
@@ -215,5 +242,132 @@ function parseInstruction() {
     return false
   }
 
+  const inst = Math.floor(cellValue / 100)
+  const instAddy = cellValue % 100
+
+  //console.log(inst + " " + instAddy)
+  //1xx Add xx to A
+  if (inst == 1) return addToA(instAddy)
+  //2xx Sub xx from A
+  if (inst == 2) return subFromA(instAddy)
+  //3xx A -> xx
+  if (inst == 3) return storeA(instAddy)
+  //5xx xx -> A
+  if (inst == 5) return loadA(instAddy)
+  //6xx jump xx
+  if (inst == 6) return jump(instAddy)
+  //7xx jump xx if A == 0
+  if (inst == 7) return jumpZero(instAddy)
+  //8xx jump xx if A > 0
+  if (inst == 8) return jumpPositive(instAddy)
+  //901 IN -> A
+  if (inst == 9 && instAddy == 1) return readIn()
+  //902 A -> OUT
+  if (inst == 9 && instAddy == 2) return writeOut()
+
   return true
+}
+
+function addToA(addy) {
+  let aValue = Number(aRegister.innerHTML)
+
+  const instA = translateAddy(addy)
+  cellValue = Number(document.getElementById(`cell${instA.high}${instA.low}`).innerHTML)
+
+  if (isNaN(cellValue) || isNaN(aValue)) return false
+
+  aValue += cellValue
+  aRegister.innerHTML = aValue
+  return true
+}
+
+function subFromA(addy) {
+  let aValue = Number(aRegister.innerHTML)
+
+  const instA = translateAddy(addy)
+  cellValue = Number(document.getElementById(`cell${instA.high}${instA.low}`).innerHTML)
+
+  if (isNaN(cellValue) || isNaN(aValue)) return false
+
+  aValue -= cellValue
+  aRegister.innerHTML = aValue
+  return true
+}
+
+function storeA(addy) {
+  const aValue = Number(aRegister.innerHTML)
+  const instAddy = translateAddy(addy)
+  const cell = document.getElementById(`cell${instAddy.high}${instAddy.low}`)
+
+  if (isNaN(aValue) || !cell) return false
+  cell.innerHTML = aValue
+
+  return true
+}
+
+function loadA(addy) {
+  const instAddy = translateAddy(addy)
+  const cellValue = Number(document.getElementById(`cell${instAddy.high}${instAddy.low}`).innerHTML)
+
+  if (isNaN(cellValue)) return false
+  aRegister.innerHTML = cellValue
+
+  return true
+}
+
+function jump(addy) {
+  if (isNaN(addy) || addy < 0 || addy > 99) return false
+
+  progCounter = addy
+  programCounter.innerHTML = addy
+
+  return false //Always returns false as we do not want to advance the PC on step
+}
+
+function jumpZero(addy) {
+  if (isNaN(addy) || addy < 0 || addy > 99) return false
+
+  if (Number(aRegister.innerHTML) == 0) {
+    progCounter = addy
+    programCounter.innerHTML = addy
+    return false
+  } else return true
+}
+
+function jumpPositive(addy) {
+  if (isNaN(addy) || addy < 0 || addy > 99) return false
+
+  if (Number(aRegister.innerHTML) >= 0) {
+    progCounter = addy
+    programCounter.innerHTML = addy
+    return false
+  } else return true
+}
+
+function readIn() {
+  if (inArray.length == 0) return false
+
+  const value = inArray.pop()
+  aRegister.innerHTML = value
+  updateInSheet()
+
+  return true
+}
+
+function writeOut() {
+  const aValue = Number(aRegister.innerHTML)
+
+  if (isNaN(aValue)) return false
+
+  pushOut(aValue)
+
+  return true
+}
+
+function translateAddy(addy) {
+  const retObj = {}
+  retObj.high = Math.floor(addy / 10) % 10
+  retObj.low = addy % 10
+
+  return retObj
 }
