@@ -451,6 +451,7 @@ function loadState() {
       })
     }
     if (sectionArr[i] == "IN") {
+      clearIn()
       let inValues = sectionArr[i + 1].split("|")
       inValues.map((val) => {
         inArray.push(val)
