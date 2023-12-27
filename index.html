@@ -10,7 +10,11 @@
 </head>
 
 <body class="h-screen w-screen font-mono bg-gray-600">
-  <div class="hidden bg-red-700"></div>
+  <div class="hidden">
+    <span class="bg-red-700"></span>
+    <span class="bg-green-700"></span>
+  </div>
+
   <div class="grid grid-cols-5 grid-rows-4 h-screen w-screen">
 
     <!-- Memory -->
@@ -40,7 +44,7 @@
 
     <!-- Outbox -->
     <div id="outSection"
-      class="flex flex-col col-start-5 border-2 border-black m-1 text-center bg-yellow-500 rounded-md overflow-y-hidden">
+      class="flex flex-col col-start-5 border-2 border-black m-1 text-center bg-yellow-200 rounded-md overflow-y-hidden">
       <h3 class="bg-black text-white font-extrabold">OUT</h3>
       <div class="flex px-2 py-1 my-1 h-full overflow-y-hidden">
         <div id="outSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-hidden">
@@ -51,45 +55,71 @@
 
     <!-- Program options -->
     <div id="programSection"
-      class="col-start-4 row-start-3 row-span-2 border-2 border-black m-1 text-center overflow-hidden rounded-md bg-amber-400">
+      class="col-start-4 row-start-3 row-span-2 border-2 border-black m-1 text-center overflow-hidden rounded-md bg-yellow-200">
       <h3 class="bg-black text-white font-extrabold">PROGRAM</h3>
+
       <div class="flex m-1 flex-wrap">
         <div class="flex flex-col m-1">
           <p class="text-left">Address:</p>
           <input id="progAddy" type="text" size="3" class="text-right px-1 border border-black rounded-md" value="00">
         </div>
+
         <div class="flex flex-col m-1">
           <p class="text-left">Data:</p>
           <input id="progData" type="text" size="10" class="text-right px-1 border border-black rounded-md" value="000">
         </div>
+
         <button onclick="pushProg()"
           class="grow bg-green-500 rounded-lg py-1 px-3 m-1 border border-black">Push</button>
         <button onclick="clearProgAddress()"
           class="bg-red-600 rounded-lg py-1 px-3 m-1 border border-black">Clear</button>
       </div>
+
       <div class="flex m-1">
         <input id="progAutoInc" type="checkbox" class="mr-2" checked>
         <p>Auto-Increment Address</p>
       </div>
-      <div class="flex flex-col m-1">
-        <p>LOAD:</p>
-        <select id="progLoader" class="border border-black rounded-md">
-          <option value="PROG#00-901|01-345|02-901|03-145|04-902|05-0#IN#174|238">#0 - Add 2 Numbers together and
-            output</option>
-          <option
-            value="PROG#00-901|01-370|02-901|03-371|04-270|05-820|06-630|20-592|21-171|22-392|23-570|24-290|25-370|26-750|27-620|30-592|31-170|32-392|33-571|34-290|35-371|36-750|37-630|50-592|51-902|52-554|53-392|54-0|90-1|92-0#IN#4|3|3|4">
-            #1 - Multiple 2 Numbers and output</option>
+
+      <div class="flex flex-col m-1 bg-yellow-400 border border-black rounded-md">
+        <p class="font-bold">LOAD:</p>
+        <select id="progLoader" class="border border-black rounded-md mx-1">
+          <option value="">Please Select</option>
+          <option value="PROG##IN#">Clear Memory</option>
+          <optgroup label="Challenges from the video">
+            <option value="PROG#00-901|01-345|02-901|03-145|04-902|05-0#IN#174|238">#0 - [Demo] Add 2 Numbers
+            </option>
+            <option
+              value="PROG#00-901|01-320|02-901|03-321|04-901|05-322|06-901|07-902|08-522|09-902|10-521|11-902|12-520|13-902|14-0#IN#270|250|230|210">
+              #1 - [Easy] Reversed (Bruteforce) </option>
+            <option
+              value="PROG#00-901|01-391|02-901|03-192|04-392|05-591|06-290|07-391|08-730|09-602|30-592|31-902|32-592|33-292|34-392|35-0|90-1|92-0#IN#3|8|7|1|4">
+              #2 - [Med ] Addem' up </option>
+            <option
+              value="PROG#00-901|01-350|02-361|03-901|04-351|05-561|06-251|07-361|08-560|09-190|10-360|11-561|12-720|13-805|14-560|15-290|16-360|17-561|18-151|19-361|20-560|21-902|22-561|23-902|24-561|25-261|26-361|27-360|28-0|60-0|90-1#IN#|5|21|5|20">
+              #3 - [Hard] Divide </option>
+          </optgroup>
+          <optgroup label="Other Programs">
+            <option
+              value="PROG#00-901|01-370|02-901|03-371|04-270|05-820|06-630|20-592|21-171|22-392|23-570|24-290|25-370|26-750|27-620|30-592|31-170|32-392|33-571|34-290|35-371|36-750|37-630|50-592|51-902|52-554|53-392|54-0|90-1|92-0#IN#4|3|3|4">
+              #1 - Multiply 2 Numbers and Output</option>
+          </optgroup>
         </select>
+
         <button onclick="loadState()"
-          class="grow bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black">Load</button>
+          class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black">Load</button>
+      </div>
+
+      <div class="flex flex-col m-1 bg-yellow-400 border border-black rounded-md">
+        <p class="font-bold">SAVE:</p>
+
         <button onclick="clickSaveState()"
-          class="grow bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black">Save</button>
+          class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black">Save</button>
       </div>
     </div>
 
     <!-- Run options -->
     <div id="infoSection"
-      class="col-start-5 row-start-2 row-span-3 border-2 bg-white border-black m-1 text-center rounded-md">
+      class="col-start-5 row-start-2 row-span-3 border-2 bg-yellow-200 border-black m-1 text-center rounded-md">
       <h3 class="bg-black text-white font-extrabold">INFO</h3>
 
       <div class="flex m-2">
@@ -113,15 +143,13 @@
           <button id="haltProgram" onclick="haltProgram()"
             class="m-1 p-1 bg-red-500 rounded-md text-white border border-red-800 grow">Halt</button>
           <button id="zeroProgram" onclick="resetProgramCounter()"
-            class="m-1 p-1 bg-yellow-500 rounded-md text-white border border-yellow-800 grow">Reset</button>
+            class="m-1 p-1 bg-purple-500 rounded-md text-white border border-purple-800 grow">Reset</button>
         </div>
 
-        <hr class="my-2">
-
         <div class="flex">
-          <p id="runState" class="grow">Halted</p>
+          <p id="runState" class="grow text-left">Halted</p>
           <input id="runSpeed" min="0.5" max="10" step="0.5" type="range" value="1" onchange="changeRunSpeed()"
-            oninput="changeRunSpeed()">
+            class="grow" oninput="changeRunSpeed()">
 
         </div>
         <p id="curSpeed">1 Hz</p>

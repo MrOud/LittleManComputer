@@ -79,6 +79,14 @@ function updateInSheet() {
   })
 }
 
+function clearInSheet() {
+  for (let i = 0; i < 100; i++) {
+    const cellAddy = translateAddy(i)
+    const cell = document.getElementById(`cell${cellAddy.high}${cellAddy.low}`)
+    cell.innerHTML = "---"
+  }
+}
+
 function setCellBackground(addy, bgColor) {
   const cellAddy = translateAddy(addy)
   const cellParagraph = document.getElementById("address" + cellAddy.high + cellAddy.low, bgColor)
@@ -235,9 +243,11 @@ function stepProgram() {
 
 let interval
 function runProgram() {
-  interval = setInterval(stepProgram, 1000 / runSpeed.value)
-  runState.innerHTML = "Running"
-  isRunning = true
+  if (!isRunning) {
+    interval = setInterval(stepProgram, 1000 / runSpeed.value)
+    runState.innerHTML = "Running"
+    isRunning = true
+  }
 }
 
 function haltProgram() {
@@ -441,9 +451,13 @@ function clickSaveState() {
 
 function loadState() {
   const loadProg = document.getElementById("progLoader")
+  if (loadProg.value == "") return
+
   let sectionArr = loadProg.value.split("#")
+  resetProgramCounter()
   for (let i = 0; i < sectionArr.length; i += 2) {
     if (sectionArr[i] == "PROG") {
+      clearInSheet()
       let instSets = sectionArr[i + 1].split("|")
       instSets.map((val) => {
         instParts = val.split("-")
