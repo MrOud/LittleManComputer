@@ -3,13 +3,15 @@
 /**
  * MEMORY SECTION
  */
-const memCells = document.getElementById('memCells')
+const memCells = document.getElementById('memCells') //Get the div to hold all the elements
+
+//Fill in the 100 data cells
 for (let i = 0; i < 10; i++) {
   for (let j = 0; j < 10; j++) {
-    //create our new cell
-    let newCell = document.createElement('div')
-    let cellAddy = document.createElement('p')
-    let cellValue = document.createElement('p')
+
+    let newCell = document.createElement('div') //create our new cell
+    let cellAddy = document.createElement('p') //paragraph to display address of cell
+    let cellValue = document.createElement('p') //paragraph to display data stored, or --- for unused
 
     //style & set
     cellValue.id = "cell" + j + i
@@ -22,6 +24,7 @@ for (let i = 0; i < 10; i++) {
       "m-1"
     )
 
+    cellAddy.id = "address" + j + i
     cellAddy.innerHTML = "" + j + i
     cellAddy.classList.add(
       "text-sm",
@@ -39,6 +42,7 @@ for (let i = 0; i < 10; i++) {
     memCells.appendChild(newCell)
   }
 }
+setCellBackground(0, "bg-green-700")
 
 /**
  * INPUT SECTION
@@ -73,6 +77,21 @@ function updateInSheet() {
     p.innerHTML = val
     inSheet.prepend(p)
   })
+}
+
+function setCellBackground(addy, bgColor) {
+  const cellAddy = translateAddy(addy)
+  const cellParagraph = document.getElementById("address" + cellAddy.high + cellAddy.low, bgColor)
+  cellParagraph.classList.remove(...cellParagraph.classList)
+  cellParagraph.classList.add(
+    "text-sm",
+    "text-white",
+    "text-right",
+    bgColor,
+    "px-1",
+    "rounded-md",
+    "rounded-b-none"
+  )
 }
 
 /**
@@ -143,6 +162,22 @@ function pushProg() {
   let addy = Math.floor(Number(progAddy.value))
   const data = Math.floor(Number(progData.value))
 
+  setCellValue(addy, data)
+}
+
+function clearProgAddress() {
+  const addy = Math.floor(Number(progAddy.value))
+
+  if (!validateProgAddy(addy)) return
+
+  const addyHigh = Math.floor(addy / 10)
+  const addyLow = addy % 10
+
+  const cell = document.getElementById("cell" + addyHigh + addyLow)
+  cell.innerHTML = "---"
+}
+
+function setCellValue(addy, data) {
   if (!validateProgInputs(addy, data)) return
 
   let addyHigh = Math.floor(addy / 10)
@@ -162,18 +197,6 @@ function pushProg() {
 
     progAddy.value = `${addyHigh}${addyLow}`
   }
-}
-
-function clearProgAddress() {
-  const addy = Math.floor(Number(progAddy.value))
-
-  if (!validateProgAddy(addy)) return
-
-  const addyHigh = Math.floor(addy / 10)
-  const addyLow = addy % 10
-
-  const cell = document.getElementById("cell" + addyHigh + addyLow)
-  cell.innerHTML = "---"
 }
 
 /**
@@ -199,11 +222,15 @@ function changeRunSpeed() {
 }
 
 function stepProgram() {
-  if (!parseInstruction()) return
+  if (!parseInstruction()) {
+    return
+  }
+  setCellBackground(progCounter, "bg-black")
 
   progCounter += 1
   if (progCounter > 99) progCounter = 0
   programCounter.innerHTML = `${Math.floor(progCounter / 10)}${progCounter % 10}`
+  setCellBackground(progCounter, "bg-green-700")
 }
 
 let interval
@@ -221,7 +248,10 @@ function haltProgram() {
 
 function resetProgramCounter() {
   haltProgram()
+
+  setCellBackground(progCounter, "bg-black")
   progCounter = 0
+  setCellBackground(progCounter, "bg-green-700")
 
   programCounter.innerHTML = '00'
 }
@@ -318,7 +348,9 @@ function loadA(addy) {
 function jump(addy) {
   if (isNaN(addy) || addy < 0 || addy > 99) return false
 
+  setCellBackground(progCounter, "bg-black")
   progCounter = addy
+  setCellBackground(progCounter, "bg-green-700")
   programCounter.innerHTML = addy
 
   return false //Always returns false as we do not want to advance the PC on step
@@ -328,7 +360,9 @@ function jumpZero(addy) {
   if (isNaN(addy) || addy < 0 || addy > 99) return false
 
   if (Number(aRegister.innerHTML) == 0) {
+    setCellBackground(progCounter, "bg-black")
     progCounter = addy
+    setCellBackground(progCounter, "bg-green-700")
     programCounter.innerHTML = addy
     return false
   } else return true
@@ -338,14 +372,19 @@ function jumpPositive(addy) {
   if (isNaN(addy) || addy < 0 || addy > 99) return false
 
   if (Number(aRegister.innerHTML) >= 0) {
+    setCellBackground(progCounter, "bg-black")
     progCounter = addy
+    setCellBackground(progCounter, "bg-green-700")
     programCounter.innerHTML = addy
     return false
   } else return true
 }
 
 function readIn() {
-  if (inArray.length == 0) return false
+  if (inArray.length == 0) {
+    haltProgram()
+    return false
+  }
 
   const value = inArray.pop()
   aRegister.innerHTML = value
@@ -370,4 +409,53 @@ function translateAddy(addy) {
   retObj.low = addy % 10
 
   return retObj
+}
+
+function saveState() {
+  retStr = "PROG#"
+  let validCells = new Array()
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      const readCell = document.getElementById("cell" + i + j)
+      const readCellValue = Number(readCell.innerHTML)
+      if (!isNaN(readCellValue)) {
+        validCells.push("" + i + j + "-" + readCellValue)
+      }
+    }
+  }
+  retStr += validCells.join("|")
+
+  retStr += "#IN#"
+  let validIn = new Array()
+  inArray.map((val) => {
+    validIn.push(val)
+  })
+  retStr += validIn.join("|")
+  return retStr
+}
+
+function clickSaveState() {
+  const saved = saveState()
+  console.log(saved)
+}
+
+function loadState() {
+  const loadProg = document.getElementById("progLoader")
+  let sectionArr = loadProg.value.split("#")
+  for (let i = 0; i < sectionArr.length; i += 2) {
+    if (sectionArr[i] == "PROG") {
+      let instSets = sectionArr[i + 1].split("|")
+      instSets.map((val) => {
+        instParts = val.split("-")
+        setCellValue(Number(instParts[0]), Number(instParts[1]))
+      })
+    }
+    if (sectionArr[i] == "IN") {
+      let inValues = sectionArr[i + 1].split("|")
+      inValues.map((val) => {
+        inArray.push(val)
+      })
+      updateInSheet()
+    }
+  }
 }

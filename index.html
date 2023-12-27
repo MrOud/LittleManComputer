@@ -10,6 +10,7 @@
 </head>
 
 <body class="h-screen w-screen font-mono bg-gray-600">
+  <div class="hidden bg-red-700"></div>
   <div class="grid grid-cols-5 grid-rows-4 h-screen w-screen">
 
     <!-- Memory -->
@@ -69,6 +70,18 @@
       <div class="flex m-1">
         <input id="progAutoInc" type="checkbox" class="mr-2" checked>
         <p>Auto-Increment Address</p>
+      </div>
+      <div class="flex flex-col m-1">
+        <p>LOAD:</p>
+        <select id="progLoader" class="border border-black rounded-md">
+          <option value="PROG#00-901|01-345|02-901|03-145|04-902|05-0#IN#174|238">#0 - Add 2 Numbers together and
+            output</option>
+          <option value="add2">#1 - Multiple 2 Numbers and output</option>
+        </select>
+        <button onclick="loadState()"
+          class="grow bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black">Load</button>
+        <button onclick="clickSaveState()"
+          class="grow bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black">Save</button>
       </div>
     </div>
 
