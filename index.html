@@ -10,9 +10,19 @@
 </head>
 
 <body class="h-screen w-screen font-mono bg-gray-600">
-  <div class="hidden">
-    <span class="bg-red-700"></span>
-    <span class="bg-green-700"></span>
+
+  <!-- Mobile/low resolution warning -->
+  <div class="md:hidden absolute top-0 left-0 bg-white w-full h-full p-5">
+    <div class="font-extrabold text-lg p-3">
+      <h2>Hi,</h2>
+      <p>Thanks for checking out The Little Man Computer, but for the
+        best experience
+        you really
+        should view
+        it on a full
+        screen; not on a mobile device.</p>
+      <p class="mt-10">Paper computers were made for an 8&#x00BD;x11 world. =]</p>
+    </div>
   </div>
 
   <div class="grid grid-cols-5 grid-rows-4 h-screen w-screen">
@@ -30,11 +40,13 @@
     <div id="inSection"
       class="flex flex-col col-start-4 row-span-2 border-2 border-black m-1 text-center bg-yellow-200 rounded-md overflow-y-hidden">
       <h3 class="bg-black text-white font-extrabold">IN</h3>
-      <div class="flex px-2 py-1">
-        <button onclick="pushIn()" class="bg-green-500 rounded-lg py-1 px-3 border border-black">Push</button>
-        <input id="pushValue" type="number" min="0" max="1024" value="0" onchange="validateIn()"
-          class="border border-gray-700 text-right rounded-md mx-2 grow">
-        <button onclick="clearIn()" class="bg-red-600 rounded-lg py-1 px-3 border border-black">Clear</button>
+      <input id="pushValue" type="number" min="0" max="1024" value="0" onchange="validateIn()"
+        class="border border-gray-700 text-right rounded-md m-2 grow">
+      <div class="flex m-1">
+        <button onclick="pushIn()"
+          class="grow bg-green-500 rounded-lg py-1 px-3 border border-black text-white">Push</button>
+        <button onclick="clearIn()"
+          class="grow ml-2 bg-red-600 rounded-lg py-1 px-3 border border-black text-white">Clear</button>
       </div>
       <div class="flex px-2 py-1 my-1 h-full overflow-y-hidden">
         <div id="inSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-hidden">
@@ -47,10 +59,11 @@
       class="flex flex-col col-start-5 border-2 border-black m-1 text-center bg-yellow-200 rounded-md overflow-y-hidden">
       <h3 class="bg-black text-white font-extrabold">OUT</h3>
       <div class="flex px-2 py-1 my-1 h-full overflow-y-hidden">
-        <div id="outSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-hidden">
+        <div id="outSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-scroll">
         </div>
-        <button onclick="clearOut()" class="bg-red-600 rounded-lg py-1 px-3 border border-black">Clear</button>
       </div>
+      <button onclick="clearOut()"
+        class="bg-red-600 rounded-lg py-1 px-3 border border-black m-2 mt-1 text-white">Clear</button>
     </div>
 
     <!-- Program options -->
@@ -58,39 +71,48 @@
       class="col-start-4 row-start-3 row-span-2 border-2 border-black m-1 text-center overflow-hidden rounded-md bg-yellow-200">
       <h3 class="bg-black text-white font-extrabold">PROGRAM</h3>
 
-      <div class="flex m-1 flex-wrap">
-        <div class="flex flex-col m-1">
-          <p class="text-left">Address:</p>
-          <input id="progAddy" type="text" size="3" class="text-right px-1 border border-black rounded-md" value="00">
+      <div class="flex flex-col">
+
+        <div class="flex">
+          <div class="flex flex-col m-1  w-1/4">
+            <p class="text-right">Address:</p>
+            <p class="text-right mt-2">Data:</p>
+          </div>
+          <div class="flex flex-col m-1 grow">
+            <input id="progAddy" type="number" class="grow text-right px-1 border border-black rounded-md" value="0">
+            <input id="progData" type="number" class="grow text-right px-1 border border-black rounded-md mt-2"
+              value="0">
+          </div>
+
+
         </div>
 
-        <div class="flex flex-col m-1">
-          <p class="text-left">Data:</p>
-          <input id="progData" type="text" size="10" class="text-right px-1 border border-black rounded-md" value="000">
+        <div class="flex justify-evenly">
+          <button onclick="pushProg()"
+            class="bg-green-500 text-white rounded-lg py-1 px-3 m-1 border border-black grow">Push</button>
+          <button onclick="clearProgAddress()"
+            class="bg-red-600 text-white rounded-lg py-1 px-3 m-1 border border-black grow">Clear</button>
         </div>
-
-        <button onclick="pushProg()"
-          class="grow bg-green-500 rounded-lg py-1 px-3 m-1 border border-black">Push</button>
-        <button onclick="clearProgAddress()"
-          class="bg-red-600 rounded-lg py-1 px-3 m-1 border border-black">Clear</button>
       </div>
 
-      <div class="flex m-1">
+      <div class="flex m-1 justify-center">
         <input id="progAutoInc" type="checkbox" class="mr-2" checked>
         <p>Auto-Increment Address</p>
       </div>
 
-      <div class="flex flex-col m-1 bg-yellow-400 border border-black rounded-md">
-        <p class="font-bold">LOAD:</p>
-        <select id="progLoader" class="border border-black rounded-md mx-1">
+      <div class="flex flex-col px-2 py-4 m-1 bg-yellow-400 border border-black rounded-md">
+        <select id="progLoader" class="border border-black rounded-md">
           <option value="">Please Select</option>
-          <option value="PROG##IN#">Clear Memory</option>
+          <optgroup label="Utility">
+            <option value="PROG##IN#">Clear Memory</option>
+          </optgroup>
+
           <optgroup label="Challenges from the video">
             <option value="PROG#00-901|01-345|02-901|03-145|04-902|05-0#IN#174|238">#0 - [Demo] Add 2 Numbers
             </option>
             <option
               value="PROG#00-901|01-320|02-901|03-321|04-901|05-322|06-901|07-902|08-522|09-902|10-521|11-902|12-520|13-902|14-0#IN#270|250|230|210">
-              #1 - [Easy] Reversed (Bruteforce) </option>
+              #1 - [Easy] Reversed</option>
             <option
               value="PROG#00-901|01-391|02-901|03-192|04-392|05-591|06-290|07-391|08-730|09-602|30-592|31-902|32-592|33-292|34-392|35-0|90-1|92-0#IN#3|8|7|1|4">
               #2 - [Med ] Addem' up </option>
@@ -103,17 +125,23 @@
               value="PROG#00-901|01-370|02-901|03-371|04-270|05-820|06-630|20-592|21-171|22-392|23-570|24-290|25-370|26-750|27-620|30-592|31-170|32-392|33-571|34-290|35-371|36-750|37-630|50-592|51-902|52-554|53-392|54-0|90-1|92-0#IN#4|3|3|4">
               #1 - Multiply 2 Numbers and Output</option>
           </optgroup>
+          <optgroup id="savedPrograms" label="User Created">
+          </optgroup>
         </select>
 
         <button onclick="loadState()"
-          class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black">Load</button>
+          class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-4">Load</button>
       </div>
 
-      <div class="flex flex-col m-1 bg-yellow-400 border border-black rounded-md">
-        <p class="font-bold">SAVE:</p>
-
-        <button onclick="clickSaveState()"
-          class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black">Save</button>
+      <div class="flex flex-col px-2 py-4 m-1 bg-yellow-400 border border-black rounded-md">
+        <input id="saveName" type="text" placeholder="Save Name" class="px-1 border border-black rounded-md">
+        <div class="flex">
+          <button onclick="clickSave()"
+            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 mt-4 border border-black">Save</button>
+          <button onclick="clickSaveToClipboard()"
+            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 mt-4 border border-black">Copy to
+            Clipboard</button>
+        </div>
       </div>
     </div>
 
@@ -122,14 +150,17 @@
       class="col-start-5 row-start-2 row-span-3 border-2 bg-yellow-200 border-black m-1 text-center rounded-md">
       <h3 class="bg-black text-white font-extrabold">INFO</h3>
 
-      <div class="flex m-2">
-        <p>A Register:</p>
-        <p id="aRegister" class="grow">---</p>
-      </div>
+      <div class="flex">
+        <div class="flex m-2 flex-col text-left text-xl">
+          <p>A Register:</p>
+          <p>Program Counter:</p>
 
-      <div class="flex m-2">
-        <p>Program Counter:</p>
-        <p id="programCounter" class="grow">00</p>
+        </div>
+
+        <div class="flex m-2 flex-col grow">
+          <p id="aRegister" class="grow text-xl">---</p>
+          <p id="programCounter" class="grow text-xl mx-4">00</p>
+        </div>
       </div>
 
       <hr>
@@ -147,12 +178,12 @@
         </div>
 
         <div class="flex">
-          <p id="runState" class="grow text-left">Halted</p>
+          <p id="runState" class="w-1/3 text-xl font-bold bg-red-400 border border-black rounded-md">Halted</p>
           <input id="runSpeed" min="0.5" max="10" step="0.5" type="range" value="1" onchange="changeRunSpeed()"
-            class="grow" oninput="changeRunSpeed()">
-
+            class="grow ml-2" oninput="changeRunSpeed()">
+          <p id="curSpeed" class="ml-2 text-lg w-1/5">1.0Hz</p>
         </div>
-        <p id="curSpeed">1 Hz</p>
+
       </div>
 
       <div class="bg-white border border-gray-700 m-1 rounded-md mt-0 overflow-hidden">
@@ -169,6 +200,15 @@
         <p class="text-sm text-left px-3 bg-lime-200 rounded-b-md">902 - A -> Out</p>
       </div>
     </div>
+  </div>
+
+  <!-- forcing tailwind render of dynamically generated CSS -->
+  <div class="hidden">
+    <span class="bg-red-700"></span>
+    <span class="bg-green-700"></span>
+    <span class="bg-green-400"></span>
+    <span class="bg-blue-400"></span>
+    <span class="lg:text-xl"></span>
   </div>
 </body>
 

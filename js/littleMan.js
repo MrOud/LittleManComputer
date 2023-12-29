@@ -1,5 +1,10 @@
 //Defered
 
+
+/**
+ * START-UP
+ */
+
 /**
  * MEMORY SECTION
  */
@@ -35,6 +40,11 @@ for (let i = 0; i < 10; i++) {
     )
 
     cellValue.innerHTML = "---"
+    cellValue.classList.add(
+      "md:text-lg",
+      "lg:text-xl",
+      "mt-1",
+      "font-bold")
 
     //Add to document
     newCell.appendChild(cellAddy)
@@ -43,6 +53,16 @@ for (let i = 0; i < 10; i++) {
   }
 }
 setCellBackground(0, "bg-green-700")
+
+//Load any saved programs
+function loadLocalStorage() {
+  const localKeys = Object.keys(localStorage)
+  localKeys.map((name) => {
+    const lsProg = localStorage.getItem(name)
+    addToProgramLoader(name, lsProg)
+  })
+}
+loadLocalStorage()
 
 /**
  * INPUT SECTION
@@ -221,13 +241,15 @@ let progCounter = 0
 let isRunning = false
 
 function changeRunSpeed() {
-  curSpeed.innerHTML = runSpeed.value + " Hz"
+  curSpeed.innerHTML = parseFloat(runSpeed.value).toFixed(1) + "Hz"
 
   if (isRunning) {
     haltProgram()
     runProgram()
   }
 }
+
+let stepInterval
 
 function stepProgram() {
   if (!parseInstruction()) {
@@ -237,23 +259,40 @@ function stepProgram() {
 
   progCounter += 1
   if (progCounter > 99) progCounter = 0
+
   programCounter.innerHTML = `${Math.floor(progCounter / 10)}${progCounter % 10}`
   setCellBackground(progCounter, "bg-green-700")
+
+  if (runState.innerHTML == "Halted") {
+    runState.classList.remove("bg-red-400")
+    runState.classList.add("bg-blue-400")
+    runState.innerHTML = "Step"
+  }
 }
 
-let interval
 function runProgram() {
   if (!isRunning) {
+    const stepButton = document.getElementById("stepProgram")
+    stepButton.disabled = true
+    stepCount = 0
     interval = setInterval(stepProgram, 1000 / runSpeed.value)
     runState.innerHTML = "Running"
     isRunning = true
+    runState.classList.remove("bg-red-400", "bg-blue-400")
+    runState.classList.add("bg-green-400")
   }
 }
 
 function haltProgram() {
-  window.clearInterval(interval)
-  runState.innerHTML = "Halted"
-  isRunning = false
+  if (isRunning) {
+    const stepButton = document.getElementById("stepProgram")
+    stepButton.disabled = false
+    window.clearInterval(interval)
+    runState.innerHTML = "Halted"
+    isRunning = false
+    runState.classList.remove("bg-green-400", "bg-blue-400")
+    runState.classList.add("bg-red-400")
+  }
 }
 
 function resetProgramCounter() {
@@ -444,9 +483,29 @@ function saveState() {
   return retStr
 }
 
-function clickSaveState() {
+function clickSave() {
   const saved = saveState()
-  console.log(saved)
+  const saveName = document.getElementById("saveName")
+  const progName = (saveName.value.length == 0) ? "NO-NAME" : saveName.value
+
+  addToProgramLoader(progName, saved)
+  localStorage.setItem(progName, saved)
+
+}
+
+function addToProgramLoader(progName, saved) {
+  const savedPrograms = document.getElementById("savedPrograms")
+  const newOption = document.createElement("option")
+
+  newOption.value = saved
+  newOption.innerHTML = progName
+  savedPrograms.appendChild(newOption)
+}
+
+function clickSaveToClipboard() {
+  const saved = saveState()
+  navigator.clipboard.writeText(saved)
+  pushOut("Copied to Clipboard!")
 }
 
 function loadState() {
