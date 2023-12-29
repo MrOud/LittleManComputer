@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Little Man Computer</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="public/style.min.css">
   <script src="./js/littleMan.js" defer></script>
 </head>
 
@@ -25,8 +25,17 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-5 grid-rows-4 h-screen w-screen">
+  <!-- String to program loader -->
+  <div id="stringLoadModal" class="hidden bg-white border border-black rounded-md absolute left-1/4 top-1/4 p-4">
+    <h2>Enter Program String:</h2>
+    <input id="stringLoadIn" type="text" class="px-1 border border-black rounded-md">
+    <button onclick="loadString()"
+      class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-4">Load</button>
+    <button onclick="clickLoadString()"
+      class="grow text-white bg-red-600 rounded-lg py-1 px-3 m-1 border border-black mt-4">Cancel</button>
+  </div>
 
+  <div class="grid grid-cols-5 grid-rows-4 h-screen w-screen">
     <!-- Memory -->
     <div id="memSection"
       class=" flex flex-col row-start-1 col-start-1 row-end-5 col-end-4 border-2 border-black m-1 text-center rounded-md">
@@ -129,8 +138,12 @@
           </optgroup>
         </select>
 
-        <button onclick="loadState()"
-          class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-4">Load</button>
+        <div class="flex">
+          <button onclick="loadSelect()"
+            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-4">Load</button>
+          <button onclick="clickLoadString()"
+            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-4">Load String</button>
+        </div>
       </div>
 
       <div class="flex flex-col px-2 py-4 m-1 bg-yellow-400 border border-black rounded-md">

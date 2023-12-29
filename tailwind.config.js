@@ -3,13 +3,7 @@ module.exports = {
   content: [
     './**/*.{html, js}'
   ],
-  theme: {
-    extend: {
-      fontFamily: {
-        'kalnia': 'Kalnia'
-      }
-    },
-  },
+
   plugins: [],
 }
 

@@ -508,11 +508,10 @@ function clickSaveToClipboard() {
   pushOut("Copied to Clipboard!")
 }
 
-function loadState() {
-  const loadProg = document.getElementById("progLoader")
+function loadState(loadProg) {
   if (loadProg.value == "") return
 
-  let sectionArr = loadProg.value.split("#")
+  let sectionArr = loadProg.split("#")
   resetProgramCounter()
   for (let i = 0; i < sectionArr.length; i += 2) {
     if (sectionArr[i] == "PROG") {
@@ -532,4 +531,22 @@ function loadState() {
       updateInSheet()
     }
   }
+}
+
+function loadSelect() {
+  const loadProg = document.getElementById("progLoader")
+  loadState(loadProg.value)
+}
+
+const loadModal = document.getElementById("stringLoadModal")
+
+function loadString() {
+  const loadProg = document.getElementById("stringLoadIn")
+  loadState(loadProg.value)
+  loadModal.classList.toggle("hidden")
+  loadProg.value = ""
+}
+
+function clickLoadString() {
+  loadModal.classList.toggle("hidden")
 }
