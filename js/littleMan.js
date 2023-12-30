@@ -154,6 +154,14 @@ const progAddy = document.getElementById("progAddy")
 const progData = document.getElementById("progData")
 const progAutoInc = document.getElementById("progAutoInc")
 
+progData.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault()
+    pushProg()
+    progData.select()
+  }
+})
+
 function validateProgData(data) {
   if (isNaN(data)) {
     console.log("Not valid integer")
@@ -226,6 +234,8 @@ function setCellValue(addy, data) {
     progAddy.value = `${addyHigh}${addyLow}`
   }
 }
+
+
 
 /**
  * Info Section

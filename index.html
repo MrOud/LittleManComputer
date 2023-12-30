@@ -50,14 +50,14 @@
       class="flex flex-col col-start-4 row-span-2 border-2 border-black m-1 text-center bg-yellow-200 rounded-md overflow-y-hidden">
       <h3 class="bg-black text-white font-extrabold">IN</h3>
       <input id="pushValue" type="number" min="0" max="1024" value="0" onchange="validateIn()"
-        class="border border-gray-700 text-right rounded-md m-2 grow">
-      <div class="flex m-1">
+        class="border border-gray-700 text-right rounded-md m-1 grow">
+      <div class="flex mx-1">
         <button onclick="pushIn()"
           class="grow bg-green-500 rounded-lg py-1 px-3 border border-black text-white">Push</button>
         <button onclick="clearIn()"
           class="grow ml-2 bg-red-600 rounded-lg py-1 px-3 border border-black text-white">Clear</button>
       </div>
-      <div class="flex px-2 py-1 my-1 h-full overflow-y-hidden">
+      <div class="flex p-1 my-1 h-full overflow-y-hidden">
         <div id="inSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-hidden">
         </div>
       </div>
@@ -67,12 +67,11 @@
     <div id="outSection"
       class="flex flex-col col-start-5 border-2 border-black m-1 text-center bg-yellow-200 rounded-md overflow-y-hidden">
       <h3 class="bg-black text-white font-extrabold">OUT</h3>
-      <div class="flex px-2 py-1 my-1 h-full overflow-y-hidden">
+      <div class="flex p-1 my-1 h-full overflow-y-hidden">
         <div id="outSheet" class=" w-full border border-gray-700 rounded-md bg-white overflow-y-scroll">
         </div>
       </div>
-      <button onclick="clearOut()"
-        class="bg-red-600 rounded-lg py-1 px-3 border border-black m-2 mt-1 text-white">Clear</button>
+      <button onclick="clearOut()" class="bg-red-600 rounded-lg px-3 border border-black m-1 text-white">Clear</button>
     </div>
 
     <!-- Program options -->
@@ -85,11 +84,12 @@
         <div class="flex">
           <div class="flex flex-col m-1  w-1/4">
             <p class="text-right">Address:</p>
-            <p class="text-right mt-2">Data:</p>
+            <p class="text-right mt-1">Data:</p>
           </div>
           <div class="flex flex-col m-1 grow">
-            <input id="progAddy" type="number" class="grow text-right px-1 border border-black rounded-md" value="0">
-            <input id="progData" type="number" class="grow text-right px-1 border border-black rounded-md mt-2"
+            <input id="progAddy" type="number" class="grow text-right px-1 border border-black rounded-md" min="0"
+              max="99" value="0">
+            <input id="progData" type="number" class="grow text-right px-1 border border-black rounded-md mt-1" min="0"
               value="0">
           </div>
 
@@ -109,7 +109,7 @@
         <p>Auto-Increment Address</p>
       </div>
 
-      <div class="flex flex-col px-2 py-4 m-1 bg-yellow-400 border border-black rounded-md">
+      <div class="flex flex-col px-2 py-2 m-1 bg-yellow-400 border border-black rounded-md">
         <select id="progLoader" class="border border-black rounded-md">
           <option value="">Please Select</option>
           <optgroup label="Utility">
@@ -121,7 +121,7 @@
             </option>
             <option
               value="PROG#00-901|01-320|02-901|03-321|04-901|05-322|06-901|07-902|08-522|09-902|10-521|11-902|12-520|13-902|14-0#IN#270|250|230|210">
-              #1 - [Easy] Reversed</option>
+              #1 - [Easy] Reverse 4 numbers</option>
             <option
               value="PROG#00-901|01-391|02-901|03-192|04-392|05-591|06-290|07-391|08-730|09-602|30-592|31-902|32-592|33-292|34-392|35-0|90-1|92-0#IN#3|8|7|1|4">
               #2 - [Med ] Addem' up </option>
@@ -133,6 +133,8 @@
             <option
               value="PROG#00-901|01-370|02-901|03-371|04-270|05-820|06-630|20-592|21-171|22-392|23-570|24-290|25-370|26-750|27-620|30-592|31-170|32-392|33-571|34-290|35-371|36-750|37-630|50-592|51-902|52-554|53-392|54-0|90-1|92-0#IN#4|3|3|4">
               #1 - Multiply 2 Numbers and Output</option>
+            <option value="PROG#00-590|01-191|02-390|03-902|04-591|05-190|06-391|07-902|08-600|90-1|91-1#IN#">#2 -
+              Fibonacci Sequence</option>
           </optgroup>
           <optgroup id="savedPrograms" label="User Created">
           </optgroup>
@@ -140,19 +142,19 @@
 
         <div class="flex">
           <button onclick="loadSelect()"
-            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-4">Load</button>
+            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-2">Load</button>
           <button onclick="clickLoadString()"
-            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-4">Load String</button>
+            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 border border-black mt-2">Load String</button>
         </div>
       </div>
 
-      <div class="flex flex-col px-2 py-4 m-1 bg-yellow-400 border border-black rounded-md">
+      <div class="flex flex-col px-2 py-2 m-1 bg-yellow-400 border border-black rounded-md">
         <input id="saveName" type="text" placeholder="Save Name" class="px-1 border border-black rounded-md">
         <div class="flex">
           <button onclick="clickSave()"
-            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 mt-4 border border-black">Save</button>
+            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 mt-2 border border-black">Save</button>
           <button onclick="clickSaveToClipboard()"
-            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 mt-4 border border-black">Copy to
+            class="grow text-white bg-purple-500 rounded-lg py-1 px-3 m-1 mt-2 border border-black">Copy to
             Clipboard</button>
         </div>
       </div>
